@@ -15,12 +15,20 @@ GRAVITY = 0.75
 moving_left = False
 moving_right = False
 
+shoot = False
+
+#load img
+bullet_img = pygame.image.load("img/icons/bullet.png")
+
 BG = (144,201,120)
 RED = (255,0,0)
 
 def draw_bg():
     screen.fill(BG)
+
+    #down
     pygame.draw.line(screen,RED,(0,400),(SCREEN_WIDTH,400),3)
+
 
 class Soldier(pygame.sprite.Sprite):
     def __init__(self,char_type,x,y,scale,speed):
@@ -57,7 +65,11 @@ class Soldier(pygame.sprite.Sprite):
 
     def draw(self):
         screen.blit(pygame.transform.flip(self.image,self.flip,False),self.rect)
-        pygame.draw.rect(screen,RED,(self.rect.x,self.rect.y,self.rect.width,self.rect.height),3)
+        # pygame.draw.rect(screen,RED,(self.rect.x,self.rect.y,self.rect.width,self.rect.height),3)
+
+    def shoot(self):
+        bullet = Bullet(self.rect.centerx + self.rect.width * 0.6 * self.direction, self.rect.centery,self                 .direction)
+        bullet_grup.add(bullet)
 
     def move(self,moving_left,moving_right):
         dx = 0
@@ -112,6 +124,29 @@ class Soldier(pygame.sprite.Sprite):
 
 
 
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self,x,y,direction):
+        pygame.sprite.Sprite.__init__(self)
+        self.speed = 10
+        self.image = bullet_img
+        self.rect = self.image.get_rect()
+        self.rect.center = (x,y)
+        self.direction = direction
+        self.flip = False
+
+    def drow (self):
+        screen.blit(pygame.transform.flip(self.image,self.flip,False),self.rect)
+
+    def update(self):
+        self.rect.x += self.speed * self.direction
+
+        if self.rect.x < 0 or self.rect.x > 800:
+            self.kill()
+
+#create grup sprite
+bullet_grup = pygame.sprite.Group()
+
+
 
 player = Soldier("player",300,200,2,5)
 enemy = Soldier("enemy",200,200,2,5)
@@ -125,6 +160,14 @@ while run:
     player.move(moving_left,moving_right)
     player.ubdate_animation()
     enemy.ubdate_animation()
+
+    bullet_grup.update()
+    bullet_grup.draw(screen)
+
+    if shoot:
+        player.shoot()
+        enemy.shoot()
+
 
     if player.alive:
         if moving_left or moving_right:
@@ -148,6 +191,9 @@ while run:
             else:
                 moving_right = False
 
+            if event.key == pygame.K_w:
+                shoot=True
+
             if event.key == pygame.K_SPACE and player.alive:
                 player.jump = True
             if event.key == pygame.K_ESCAPE:
@@ -159,6 +205,10 @@ while run:
                 moving_left = False
             if event.key == pygame.K_d:
                 moving_right = False
+
+            if event.key == pygame.K_w:
+                shoot=False
+
 
     pygame.display.update()
     clock.tick(FPS)
