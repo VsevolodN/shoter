@@ -1,4 +1,4 @@
-import pygame,random,os
+import pygame,random,os,io
 pygame.init()
 
 SCREEN_WIDTH = 800
@@ -12,23 +12,33 @@ FPS = 60
 
 GRAVITY = 0.75
 
+password = 'lemon'
+file = io.open("pass_word.txt",'r',encoding='utf-8')
+if file.readline() == password:
+    razrab = True
+else:
+    razrab = False
+file.close()
+
 moving_left = False
 moving_right = False
 
 shoot = False
+grand = False
 
-death1 = pygame.mixer.Sound("death.mp3")
-death2 = pygame.mixer.Sound("death_2.mp3")
-death3 = pygame.mixer.Sound("death_3.mp3")
-death4 = pygame.mixer.Sound("death_4.mp3")
-death5 = pygame.mixer.Sound("death_5.mp3")
-death6 = pygame.mixer.Sound("death_6.mp3")
-death7 = pygame.mixer.Sound("death_7.mp3")
-death8 = pygame.mixer.Sound("death_8.mp3")
+death1 = pygame.mixer.Sound("Sound/death.mp3")
+death2 = pygame.mixer.Sound("Sound/death_2.mp3")
+death3 = pygame.mixer.Sound("Sound/death_3.mp3")
+death4 = pygame.mixer.Sound("Sound/death_4.mp3")
+death5 = pygame.mixer.Sound("Sound/death_5.mp3")
+death6 = pygame.mixer.Sound("Sound/death_6.mp3")
+death7 = pygame.mixer.Sound("Sound/death_7.mp3")
+death8 = pygame.mixer.Sound("Sound/death_8.mp3")
 death_spis_music = [death1,death2,death3,death4,death5,death6,death7,death8]
 
 #load img
 bullet_img = pygame.image.load("img/icons/bullet.png")
+grenade_img = pygame.image.load("img/icons/grenade.png")
 
 BG = (144,201,120)
 RED = (255,0,0)
@@ -201,14 +211,16 @@ class Grenade(pygame.sprite.Sprite):
     def __init__(self,x,y,direction):
         pygame.sprite.Sprite.__init__(self)
         self.speed = 7
-        self.image = bullet_img
+        self.image = grenade_img
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)
         self.direction = direction
         self.flip = False
 
+
 #create grup sprite
 bullet_grup = pygame.sprite.Group()
+Grenade_grup = pygame.sprite.Group()
 
 
 
@@ -228,9 +240,17 @@ while run:
     bullet_grup.update()
     bullet_grup.draw(screen)
 
-    if shoot:
-        player.shoot()
+    Grenade_grup.update()
+    Grenade_grup.draw(screen)
 
+
+    if player.alive:
+        if shoot:
+            player.shoot()
+        elif grand:
+            grenade = Grenade(player.rect.centerx,player.rect.centery,player.direction)
+            Grenade_grup.add(grenade)
+            grand=False
 
     if player.alive:
         if moving_left or moving_right:
@@ -267,12 +287,19 @@ while run:
 
             if event.key == pygame.K_w:
                 shoot=False
-            if event.key == pygame.K_k:
-                player.alive=False
-                player.update_action(3)
-            if event.key == pygame.K_m:
-                death_spis_music[random.randint(0, len(death_spis_music) - 1)].play()
 
+            if event.key == pygame.K_q:
+                grand = True
+
+            if razrab:
+                if event.key == pygame.K_k:
+                    player.alive=False
+                    player.update_action(3)
+                if event.key == pygame.K_m:
+                    death_spis_music[random.randint(0, len(death_spis_music) - 1)].play()
+                if event.key == pygame.K_l:
+                    player.alive = True
+                    player.update_action(0)
 
 
     pygame.display.update()
