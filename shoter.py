@@ -17,9 +17,15 @@ moving_right = False
 
 shoot = False
 
-death = pygame.mixer.Sound("death.mp3")
+death1 = pygame.mixer.Sound("death.mp3")
 death2 = pygame.mixer.Sound("death_2.mp3")
-death_spis_music = [death,death2]
+death3 = pygame.mixer.Sound("death_3.mp3")
+death4 = pygame.mixer.Sound("death_4.mp3")
+death5 = pygame.mixer.Sound("death_5.mp3")
+death6 = pygame.mixer.Sound("death_6.mp3")
+death7 = pygame.mixer.Sound("death_7.mp3")
+death8 = pygame.mixer.Sound("death_8.mp3")
+death_spis_music = [death1,death2,death3,death4,death5,death6,death7,death8]
 
 #load img
 bullet_img = pygame.image.load("img/icons/bullet.png")
@@ -191,6 +197,16 @@ class Bullet(pygame.sprite.Sprite):
                 enemy.health-=20
                 self.kill()
 
+class Grenade(pygame.sprite.Sprite):
+    def __init__(self,x,y,direction):
+        pygame.sprite.Sprite.__init__(self)
+        self.speed = 7
+        self.image = bullet_img
+        self.rect = self.image.get_rect()
+        self.rect.center = (x,y)
+        self.direction = direction
+        self.flip = False
+
 #create grup sprite
 bullet_grup = pygame.sprite.Group()
 
@@ -254,6 +270,9 @@ while run:
             if event.key == pygame.K_k:
                 player.alive=False
                 player.update_action(3)
+            if event.key == pygame.K_m:
+                death_spis_music[random.randint(0, len(death_spis_music) - 1)].play()
+
 
 
     pygame.display.update()
