@@ -89,7 +89,6 @@ class Soldier(pygame.sprite.Sprite):
         self.image=self.animetion_list[self.action][self.frame_index]
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)
-
     def draw(self):
         screen.blit(pygame.transform.flip(self.image,self.flip,False),self.rect)
         # pygame.draw.rect(screen,RED,(self.rect.x,self.rect.y,self.rect.width,self.rect.height),3)
@@ -152,6 +151,7 @@ class Soldier(pygame.sprite.Sprite):
         ANIMATION_COLDOWN = 100
         self.image = self.animetion_list[self.action][self.frame_index]
         if pygame.time.get_ticks() - self.update_time > ANIMATION_COLDOWN:
+
             self.frame_index +=1
             self.update_time = pygame.time.get_ticks()
             if self.frame_index >= len(self.animetion_list[self.action]):
@@ -164,6 +164,7 @@ class Soldier(pygame.sprite.Sprite):
     def update_action(self,new_action):
         if new_action != self.action:
             self.action = new_action
+
             self.frame_index = 0
             self.update_time = pygame.time.get_ticks()
     def cheak_alive(self):
@@ -299,7 +300,6 @@ while run:
                     death_spis_music[random.randint(0, len(death_spis_music) - 1)].play()
                 if event.key == pygame.K_l:
                     player.alive = True
-                    player.update_action(0)
 
 
     pygame.display.update()
