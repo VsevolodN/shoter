@@ -31,13 +31,19 @@ def draw_bg():
 
 
 class Soldier(pygame.sprite.Sprite):
-    def __init__(self,char_type,x,y,scale,speed):
+    def __init__(self,char_type,x,y,scale,speed,ammo):
         pygame.sprite.Sprite.__init__(self)
         self.speed = speed
         self.alive = True
         self.jump = False
         self.vel_y = 0
+        self.ammo = ammo
+        self.start_ammo = ammo
         self.direction = 1
+        self.health = 100
+        self.max_health = self.health
+        self.culdown = 15
+        self.culdown_count = self.culdown
         self.in_air = True
         self.flip = False
         self.animetion_list = []
@@ -68,8 +74,14 @@ class Soldier(pygame.sprite.Sprite):
         # pygame.draw.rect(screen,RED,(self.rect.x,self.rect.y,self.rect.width,self.rect.height),3)
 
     def shoot(self):
-        bullet = Bullet(self.rect.centerx + self.rect.width * 0.6 * self.direction, self.rect.centery,self                 .direction)
-        bullet_grup.add(bullet)
+        if self.ammo > 0:
+            if self.culdown != 0:
+                self.culdown-=1
+            else:
+                self.culdown = self.culdown_count
+                bullet = Bullet(self.rect.centerx + self.rect.width * 0.6 * self.direction, self.rect.centery,self                 .direction)
+                bullet_grup.add(bullet)
+                self.ammo-=1
 
     def move(self,moving_left,moving_right):
         dx = 0
@@ -121,7 +133,14 @@ class Soldier(pygame.sprite.Sprite):
             self.action = new_action
             self.frame_index = 0
             self.update_time = pygame.time.get_ticks()
+    def cheak_alive(self):
+        if self.health <= 0:
+            self.alive = False
+            self.health=0
 
+    def update(self):
+        self.ubdate_animation()
+        self.cheak_alive()
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -143,13 +162,23 @@ class Bullet(pygame.sprite.Sprite):
         if self.rect.x < 0 or self.rect.x > 800:
             self.kill()
 
+        if pygame.sprite.spritecollide(player, bullet_grup, False):
+            if player.alive:
+                player.health -= 5
+                self.kill()
+
+        if pygame.sprite.spritecollide(enemy, bullet_grup, False):
+            if enemy.alive:
+                enemy.health-=20
+                self.kill()
+
 #create grup sprite
 bullet_grup = pygame.sprite.Group()
 
 
 
-player = Soldier("player",300,200,2,5)
-enemy = Soldier("enemy",200,200,2,5)
+player = Soldier("player",300,300,2,5,20)
+enemy = Soldier("enemy",200,300,2,5,10)
 
 
 run = True
@@ -158,15 +187,14 @@ while run:
     player.draw()
     enemy.draw()
     player.move(moving_left,moving_right)
-    player.ubdate_animation()
-    enemy.ubdate_animation()
+    player.update()
+    enemy.update()
 
     bullet_grup.update()
     bullet_grup.draw(screen)
 
     if shoot:
         player.shoot()
-        enemy.shoot()
 
 
     if player.alive:
@@ -184,12 +212,8 @@ while run:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
                 moving_left = True
-            else:
-                moving_left = False
             if event.key == pygame.K_d:
                 moving_right = True
-            else:
-                moving_right = False
 
             if event.key == pygame.K_w:
                 shoot=True
