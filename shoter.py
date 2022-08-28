@@ -2,7 +2,7 @@ import pygame,random,os
 pygame.init()
 
 SCREEN_WIDTH = 800
-SCREEN_HEIGHT = (SCREEN_WIDTH*0.8)
+SCREEN_HEIGHT = int((SCREEN_WIDTH*0.8))
 
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 pygame.display.set_caption("shoter")
@@ -16,6 +16,10 @@ moving_left = False
 moving_right = False
 
 shoot = False
+
+death = pygame.mixer.Sound("death.mp3")
+death2 = pygame.mixer.Sound("death_2.mp3")
+death_spis_music = [death,death2]
 
 #load img
 bullet_img = pygame.image.load("img/icons/bullet.png")
@@ -46,12 +50,13 @@ class Soldier(pygame.sprite.Sprite):
         self.culdown_count = self.culdown
         self.in_air = True
         self.flip = False
+        self.sound_play_death = True
         self.animetion_list = []
         self.frame_index = 0
         self.char_type = char_type
         self.update_time = pygame.time.get_ticks()
         self.action = 0
-        animation_types = ["Idle", "Run", "Jump"]
+        animation_types = ["Idle", "Run", "Jump","Death"]
 
 
 
@@ -74,51 +79,59 @@ class Soldier(pygame.sprite.Sprite):
         # pygame.draw.rect(screen,RED,(self.rect.x,self.rect.y,self.rect.width,self.rect.height),3)
 
     def shoot(self):
-        if self.ammo > 0:
-            if self.culdown != 0:
-                self.culdown-=1
-            else:
-                self.culdown = self.culdown_count
-                bullet = Bullet(self.rect.centerx + self.rect.width * 0.6 * self.direction, self.rect.centery,self                 .direction)
-                bullet_grup.add(bullet)
-                self.ammo-=1
+        if self.alive:
+            if self.ammo > 0:
+                if self.culdown != 0:
+                    self.culdown-=1
+                else:
+                    self.culdown = self.culdown_count
+                    bullet = Bullet(self.rect.centerx + self.rect.width * 0.75 * self.direction, self.rect.centery,self                 .direction)
+                    bullet_grup.add(bullet)
+                    self.ammo-=1
 
     def move(self,moving_left,moving_right):
-        dx = 0
-        dy = 0
+        if self.alive:
+            dx = 0
+            dy = 0
 
-        if moving_left:
-            if self.rect.x - self.speed> 0:
-                dx = -self.speed
-                self.direction=-1
-                self.flip = True
-            else:
-                dx = 0
-
-
-        if moving_right:
-            if self.rect.right + self.speed < 800:
-                dx = self.speed
-                self.direction = 1
-                self.flip = False
-            else:
-                dx=0
+            if moving_left:
+                if self.rect.x - self.speed> 0:
+                    dx = -self.speed
+                    self.direction=-1
+                    self.flip = True
+                else:
+                    dx = 0
 
 
-        if self.jump and self.in_air == False:
-            self.vel_y = -11
-            self.jump = False
-            self.in_air = True
+            if moving_right:
+                if self.rect.right + self.speed < 800:
+                    dx = self.speed
+                    self.direction = 1
+                    self.flip = False
+                else:
+                    dx=0
 
-        self.vel_y += GRAVITY
-        dy += self.vel_y
 
-        if self.rect.bottom + dy > 400:
-            dy = 400-self.rect.bottom
-            self.in_air=False
+            if self.jump and self.in_air == False:
+                self.vel_y = -11
+                self.jump = False
+                self.in_air = True
 
-        self.rect.x+=dx
-        self.rect.y+=dy
+            self.vel_y += GRAVITY
+            dy += self.vel_y
+
+            if self.rect.bottom + dy > 400:
+                dy = 400-self.rect.bottom
+                self.in_air=False
+
+            self.rect.x+=dx
+            self.rect.y+=dy
+    def sound_test(self):
+        if self.sound_play_death:
+            if self.alive == False:
+                death_spis_music[random.randint(0,len(death_spis_music)-1)].play()
+                self.sound_play_death=False
+
     def ubdate_animation(self):
         ANIMATION_COLDOWN = 100
         self.image = self.animetion_list[self.action][self.frame_index]
@@ -126,7 +139,11 @@ class Soldier(pygame.sprite.Sprite):
             self.frame_index +=1
             self.update_time = pygame.time.get_ticks()
             if self.frame_index >= len(self.animetion_list[self.action]):
-                self.frame_index = 0
+                if self.action ==3:
+                    self.frame_index = len(self.animetion_list[self.action])-1
+                else:
+                    self.frame_index = 0
+
 
     def update_action(self,new_action):
         if new_action != self.action:
@@ -137,16 +154,18 @@ class Soldier(pygame.sprite.Sprite):
         if self.health <= 0:
             self.alive = False
             self.health=0
+            self.update_action(3)
 
     def update(self):
         self.ubdate_animation()
         self.cheak_alive()
+        self.sound_test()
 
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self,x,y,direction):
         pygame.sprite.Sprite.__init__(self)
-        self.speed = 10
+        self.speed = 7
         self.image = bullet_img
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)
@@ -177,7 +196,7 @@ bullet_grup = pygame.sprite.Group()
 
 
 
-player = Soldier("player",300,300,2,5,20)
+player = Soldier("player",300,300,2,5,100)
 enemy = Soldier("enemy",200,300,2,5,10)
 
 
@@ -232,6 +251,9 @@ while run:
 
             if event.key == pygame.K_w:
                 shoot=False
+            if event.key == pygame.K_k:
+                player.alive=False
+                player.update_action(3)
 
 
     pygame.display.update()

@@ -24,5 +24,6 @@ def kol_vo(numb):
             kol+=1
     return kol
 
-lidder(random_letters())
-print(kol_vo(random.randint(1,1000000)))
+slovo="server"
+lidder(slovo)
+print(kol_vo())

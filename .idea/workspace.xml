@@ -44,6 +44,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\vknos\OneDrive\Документы\GitHub\shoter" />
       <recent name="C:\Users\vknos\Documents\GitHub\shoter\img\enemy\Idle" />
       <recent name="C:\Users\vknos\Documents\GitHub\shoter\img\player\Idle" />
       <recent name="C:\Users\vknos\Documents\GitHub\shoter\img\player\Run" />
@@ -52,7 +53,7 @@
       <recent name="C:\Users\vknos\Documents\GitHub\shoter\img" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.test">
+  <component name="RunManager" selected="Python.shoter">
     <configuration name="shoter" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="shoter" />
       <option name="INTERPRETER_OPTIONS" value="" />
