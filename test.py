@@ -1,29 +1,7 @@
-import random
-import time
-def random_letters(len = random.randint(3,9)):
-    import random
-    letters = ["a","b","c","d","e","f",'g',"h","i","j","k","l","m","n",'o','p','q','r','s','t','u','v','w','x','y','z']
-    slovo = ''
-    for i in range(len):
-        slovo = slovo+letters[random.randint(0,25)]
-    return slovo
+def sum_range(a,b):
+    c,d = a,b
+    if b > a:
+        c,d = b,a
+    return (a+b)*(c-d+1)//2
 
-def lidder(slovo):
-    v = 1
-    for i in slovo:
-        for l in range(v):
-            print(i,end = '')
-        print()
-        time.sleep(1)
-        v+=1
-
-def kol_vo(numb):
-    kol = 0
-    for i in str(numb):
-        if int(i)%2==0:
-            kol+=1
-    return kol
-
-slovo="server"
-lidder(slovo)
-print(kol_vo())
+print(sum_range(1,100))
