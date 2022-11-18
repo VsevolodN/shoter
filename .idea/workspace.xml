@@ -40,6 +40,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+<<<<<<< HEAD
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
@@ -48,8 +49,23 @@
       <recent name="C:\Users\vknos\Documents\GitHub\shoter\img\enemy\Idle" />
       <recent name="C:\Users\vknos\Documents\GitHub\shoter\img\player\Idle" />
       <recent name="C:\Users\vknos\Documents\GitHub\shoter\img\player\Run" />
+=======
+    <property name="last_opened_file_path" value="$USER_HOME$/Documents/python/python" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\vknos\OneDrive\Документы\GitHub\shoter\Sound" />
+      <recent name="C:\Users\vknos\OneDrive\Документы\GitHub\shoter\music" />
+      <recent name="C:\Users\vknos\OneDrive\Документы\GitHub\shoter" />
+      <recent name="C:\Users\vknos\OneDrive\Документы\GitHub\shoter\img\enemy" />
+      <recent name="C:\Users\vknos\OneDrive\Документы\GitHub\shoter\img\player" />
+>>>>>>> 1df0279d987e65c621195afadea9a8f28a117d0d
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\vknos\OneDrive\Документы\GitHub\shoter\img" />
+      <recent name="C:\Users\vknos\OneDrive\Документы\GitHub\shoter" />
+      <recent name="C:\Users\vknos\OneDrive\Документы\GitHub\shoter\music" />
+      <recent name="C:\Users\vknos\OneDrive\Документы\GitHub\shoter\Sound" />
       <recent name="C:\Users\vknos\Documents\GitHub\shoter\img" />
     </key>
   </component>
